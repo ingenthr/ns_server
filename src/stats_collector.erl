@@ -15,6 +15,7 @@
          handle_info/2, terminate/2, code_change/3]).
 
 -record(state, {hostname, port, buckets}).
+-record(topkey, {ops, ratio, evictions}).
 
 start_link() ->
     {error, "Don't start_link this."}.
@@ -98,7 +99,58 @@ collect(T, State, Bucket, Sock) ->
                                    State#state.hostname,
                                    State#state.port,
                                    Bucket,
-                                   Stats).
+                                   Stats),
+    {ok, _H, _E, Topkeys} = mc_client_binary:cmd(?STAT, Sock,
+                              fun (_MH, ME, CD) ->
+                                      dict:store(binary_to_list(ME#mc_entry.key),
+                                                 binary_to_list(ME#mc_entry.data),
+                                                 CD)
+                              end,
+                              dict:new(),
+                              {#mc_header{}, #mc_entry{key = <<"topkeys">>}}),
+    stats_aggregator:received_topkeys(T,
+                                      State#state.hostname,
+                                      State#state.port,
+                                      Bucket,
+                                      parse_topkeys(Topkeys)).
+
+parse_topkeys(Topkeys) ->
+    dict:map(
+        fun (_Key, Value) ->
+                parse_topkey_value(Value)
+        end,
+        Topkeys).
+
+parse_topkey_value(Value) ->
+    Tokens = string:tokens(Value, [","]),
+    Pairs = lists:map(
+        fun (S) ->
+                [K, V] = string:tokens(S, ["="]),
+                {K, string:to_integer(V)}
+        end,
+        Tokens),
+    Dict = dict:from_list(Pairs),
+    dict:map(
+        fun (_Key, TopkeyDict) ->
+                topkey_dict_to_tuple(TopkeyDict)
+        end,
+        Dict).
+
+accumulate(Keys, Dict) ->
+    lists:foldl(
+        fun (Key, Acc) ->
+                Acc + dict:fetch(Key, Dict)
+        end,
+        0,
+        Keys).
+
+topkey_dict_to_tuple(TopkeyDict) ->
+    Ctime = dict:fetch("ctime", TopkeyDict),
+    Hits = accumulate(TopkeyDict, ["get_hits", "incr_hits", "decr_hits", "delete_hits"]),
+    Ops = Hits + accumulate(TopkeyDict, ["get_misses", "incr_misses", "decr_misses", "delete_misses"]),
+    Sets = dict:fetch("cmd_set", TopkeyDict),
+    Evictions = dict:fetch("cmd_set", TopkeyDict),
+    #topkey{ops = (Ops + Sets) / Ctime, ratio = Hits / Ops, evictions = Evictions / Ctime}.
 
 %
 %% Entry Points.
