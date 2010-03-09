@@ -38,6 +38,10 @@
 
 -define(IMPL_VERSION, "1.0").
 
+%% The range used within this file is arbitrary and undefined, so I'm
+%% defining an arbitrary value here just to be rebellious.
+-define(START_FAIL, 100).
+
 %% External API
 
 start_link() ->
@@ -49,7 +53,13 @@ start_link(Options) ->
     Loop = fun (Req) ->
                    ?MODULE:loop(Req, AppRoot, DocRoot)
            end,
-    mochiweb_http:start([{name, ?MODULE}, {loop, Loop} | Options2]).
+    case mochiweb_http:start([{name, ?MODULE}, {loop, Loop} | Options2]) of
+        {ok, Pid} -> {ok, Pid};
+        Other ->
+            ns_log:log(?MODULE, ?START_FAIL,
+                       "Failed to start web service:  ~p~n", [Other]),
+            Other
+    end.
 
 stop() ->
     % Note that a supervisor might restart us right away.
@@ -1002,7 +1012,9 @@ ns_log_cat(0016) ->
 ns_log_cat(0017) ->
     crit;
 ns_log_cat(0019) ->
-    warn.
+    warn;
+ns_log_cat(?START_FAIL) ->
+    crit.
 
 ns_log_code_string(0013) ->
     "node join failure";
@@ -1015,4 +1027,6 @@ ns_log_code_string(0016) ->
 ns_log_code_string(0017) ->
     "node join failure";
 ns_log_code_string(0019) ->
-    "server error during request processing".
+    "server error during request processing";
+ns_log_code_string(?START_FAIL) ->
+    "failed to start service".
