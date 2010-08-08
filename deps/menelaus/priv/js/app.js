@@ -559,7 +559,7 @@ var NodeDialog = {
     var form = $('#init_cluster_form');
 
     if ($('#no-join-cluster')[0].checked)
-      return showInitDialog('resources');
+      return showInitDialog('secure');
 
     var errorsContainer = form.parent().find('.join_cluster_dialog_errors_container');
     errorsContainer.hide();
@@ -859,7 +859,7 @@ var NodeDialog = {
       if (pw == null || pw == "") {
         genericDialog({
           header: 'Please try again',
-          text: 'Empty password is not allowed',
+          text: 'A password of at least six characters is required.',
           buttons: {cancel: false, ok: true}
         });
         return;
@@ -867,7 +867,7 @@ var NodeDialog = {
       if (pw !== vpw) {
         genericDialog({
           header: 'Please try again',
-          text: 'Password and Verify Password do not match',
+          text: '\'Password\' and \'Verify Password\' do not match',
           buttons: {cancel: false, ok: true}
         });
         return;
