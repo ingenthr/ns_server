@@ -503,13 +503,13 @@ function showInitDialog(page, opt) {
 
   opt = opt || {};
 
-  var pages = [ "welcome", "resources", "cluster", "secure" ];
+  var pages = [ "welcome", "cluster", "resources", "secure" ];
 
   if (page == "")
     page = "welcome";
 
-  if (DAO.initStatus == "done") // If our current initStatus is already "done",
-    page = "done";              // then don't let user go back through init dialog.
+  if (false)        // If the cluster appears to be configured
+    page = "done";  // then don't let user go back through init dialog.
 
   for (var i = 0; i < pages.length; i++) {
     if (page == pages[i]) {
@@ -529,12 +529,12 @@ function showInitDialog(page, opt) {
   if (page == "done")
     $('.page-header').show();
 
-  if (DAO.initStatus != page) {
-    DAO.initStatus = page;
-    $.ajax({
-      type:'POST', url:'/node/controller/initStatus', data: 'value=' + page
-    });
-  }
+  //  if (DAO.initStatus != page) {
+  //  DAO.initStatus = page;
+  //   $.ajax({
+  //    type:'POST', url:'/node/controller/initStatus', data: 'value=' + page
+  //  });
+  //}
 
   if (page != 'done') {
     var notices = [];
@@ -559,7 +559,7 @@ var NodeDialog = {
     var form = $('#init_cluster_form');
 
     if ($('#no-join-cluster')[0].checked)
-      return showInitDialog('secure');
+      return showInitDialog('resources');
 
     var errorsContainer = form.parent().find('.join_cluster_dialog_errors_container');
     errorsContainer.hide();
@@ -728,27 +728,28 @@ var NodeDialog = {
     $(parentName + ' ' + submitSelector).click(function (e) {
         e.preventDefault();
 
-        $(parentName + ' .license_failed_message').hide();
+	showInitDialog("cluster");
+        //$(parentName + ' .license_failed_message').hide();
 
-        var license = $(parentName).find('[name=license]').val() || "";
+        //var license = $(parentName).find('[name=license]').val() || "";
 
-        $.ajax({
-          type:'POST', url:'/nodes/' + node + '/controller/settings',
-          data: 'license=' + license,
-          async:false, success:cbPost, error:cbPost
-        });
+        //$.ajax({
+        //  type:'POST', url:'/nodes/' + node + '/controller/settings',
+        //  data: 'license=' + license,
+        //  async:false, success:cbPost, error:cbPost
+        //});
 
-        function cbPost(data, status) {
-          if (status == 'success') {
-            if (opt['successFunc'] != null) {
-              opt['successFunc'](node, pagePrefix);
-            } else {
-              showInitDialog(opt["successNext"] || "resources");
-            }
-          } else {
-            $(parentName + ' .license_failed_message').show();
-          }
-        }
+        //function cbPost(data, status) {
+          //if (status == 'success') {
+            //if (opt['successFunc'] != null) {
+              //opt['successFunc'](node, pagePrefix);
+	      //} else {
+              //showInitDialog(opt["successNext"] || "resources");
+	      //}
+	    //} else {
+            //$(parentName + ' .license_failed_message').show();
+	    //}
+	  //}
       });
   },
   startPage_resources: function(node, pagePrefix, opt) {
@@ -876,7 +877,7 @@ var NodeDialog = {
         DAO.login = user;
         DAO.password = pw;
         DAO.setAuthCookie(user, pw);
-        showInitDialog('done');
+        showInitDialog('secure');
 
         if (user != null && user != "") {
           $('.sign-out-link').show();

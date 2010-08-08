@@ -1578,11 +1578,6 @@
       <div class="elastro-cling"></div>
     </div>
     <!-- screen S.1 -->
-    <div class="alert_red license_failed_message" style="display:none;">
-      <div class="al_text">
-        Invalid license. Please try again.
-      </div>
-    </div>
     <h1>Congratulations</h1>
     <form id="init_welcome_form">
       <p>
@@ -1689,7 +1684,7 @@
     <!-- screen S.5 -->
     <div class="config-top">
       <h1>Configure Server</h1>
-      <h2>Step <span class="current-step">2</span> of 3</h2>
+      <h2>Step <span class="current-step">1</span> of 2</h2>
     </div>
     <div class="alert_red" id="init_cluster_failed_message" style="display:none;">
       <div class="al_text">
@@ -1733,10 +1728,40 @@
           </div>
         </label>
       </div>
+                <table width="93%">
+            <col width="90%" />
+            <col width="" />
+            <tr>
+              <td><h2>Disk Storage</h2>
+              </td>
+              <td>
+                <!-- <a href="javascript:ServersSection.startAddLocationDialog('{%= h(escapeJS(node)) %}', 'hdd');"> -->
+                <!-- <img src="../images/add-button.png" alt="Add" style="opacity:0.5;" /> -->
+                <!-- </a> -->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <div class="hdd_resource_container">
+                  <div class="resource-row">
+                    <div>
+                      <label>Size:</label>
+                      <span style="color:#7e7e80; font-size:10pt; margin-left:5px; line-height: 25px;" class="total-size">---</span>
+                      <br style="clear:both;" />
+                    </div>
+                    <div>
+                      <label>Path:</label>
+                      <input type="text" name="path" class="path-box" />
+                      <br style="clear:both;" />
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
     </form>
     <div class="config-bottom">
       <button name="next" value="Next" class="submit next direction-button" id="step-2-next" type="submit">Next</button>
-      <button name="next" value="Back" class="submit back direction-button" id="step-2-back" type="submit">Back</button>
     </div>
     <script type="text/javascript">
       $(function(){

@@ -545,7 +545,6 @@ var MockedRequest = mkClass({
                 componentsVersion: {
                   "ns_server": "asdasd"
                 },
-                initStatus: MockedRequest.globalData.initValue,
                 pools: [
                   {name: 'default',
                    uri: "/pools/default"}]}
@@ -797,10 +796,6 @@ var MockedRequest = mkClass({
         }
       }, opt("memoryQuota"), opt('path'), opt("license"))], //missing
 
-      [post("node", "controller", "initStatus"), function ($data) {
-        this.globalData.initValue = $data.initValue;
-      }],
-
       [post("node", "controller", "doJoinCluster"), expectParams(method('handleJoinCluster'),
                                                                  "clusterMemberHostIp", "clusterMemberPort",
                                                                  "user", "password")],
@@ -863,8 +858,7 @@ var MockedRequest = mkClass({
                                                      "otpNode")],
 
       [post("settings", "web"), expectParams(method("doNothingPOST"),
-                                             "port", "username", "password",
-                                             opt("initStatus"))]
+                                             "port", "username", "password")]
     ];
 
     rv.x = x;
