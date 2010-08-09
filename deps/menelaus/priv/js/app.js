@@ -558,8 +558,14 @@ var NodeDialog = {
 
     var form = $('#init_cluster_form');
 
-    if ($('#no-join-cluster')[0].checked)
-      return showInitDialog('secure');
+    if ($('#no-join-cluster')[0].checked) {
+      return showInitDialog('secure'); // not quite, need to get it
+                                       //from server state
+      var m = $(parentName).find('[name=quota]').val() || "";
+      if (m == "") {
+        m = "none";
+      }
+    }
 
     var errorsContainer = form.parent().find('.join_cluster_dialog_errors_container');
     errorsContainer.hide();
@@ -600,6 +606,7 @@ var NodeDialog = {
       timeout: 8000
     });
   },
+  ////////////////////////////////////////////////////////////////////////
   startMemoryDialog: function (node) {
     var parentName = '#edit_server_memory_dialog';
 
@@ -888,6 +895,77 @@ var NodeDialog = {
     });
   },
   startPage_cluster: function () {
+    var parentName = '#init_cluster_dialog';
+
+    $(parentName + ' .quota_error_message').hide();
+
+    $.ajax({
+      type:'GET', url:'/nodes/self', dataType: 'json', async: false,
+      success: cb, error: cb});
+
+    function cb(data, status) {
+      if (status == 'success') {
+        var m = data['memoryQuota'];
+        if (m == null || m == "none") {
+          m = "";
+        }
+
+        $(parentName).find('[name=quota]').val(m);
+      }
+    }
+
+    $(parentName + ' button.submit').click(function (e) {
+        e.preventDefault();
+
+        $(parentName + ' .storage_location_error_message').hide();
+
+        var p = $(parentName).find('[name=path]').val() || "";
+        var q = $(parentName).find('[name=quota]').val() || "none";
+
+        $.ajax({
+          type:'POST', url:'/nodes/self/controller/resources',
+          data: 'path=' + p + '&quota=' + q + '&kind=' + storageKind,
+          async:false, success:cbPost, error:cbPost
+        });
+
+        function cbPost(data, status) {
+          if (status == 'success') {
+            $(parentName).jqmHide();
+
+            showInitDialog("resources");
+          } else {
+            $(parentName + ' .storage_location_error_message').show();
+          }
+        }
+      });
+
+    $(parentName + ' button.submit').click(function (e) {
+        e.preventDefault();
+
+        $(parentName + ' .quota_error_message').hide();
+
+        var m = $(parentName).find('[name=dynamic-ram-quota]').val() || "";
+        if (m == "") {
+          m = "none";
+        }
+
+        $.ajax({
+          type:'POST', url:'/nodes/self/controller/settings',
+          data: 'memoryQuota=' + m,
+          async:false, success:cbPost, error:cbPost
+        });
+
+        function cbPost(data, status) {
+          if (status == 'success') {
+            $(parentName).jqmHide();
+
+            showInitDialog("resources"); // Same screen used in init-config wizard.
+          } else {
+            $(parentName + ' .quota_error_message').show();
+          }
+        }
+      });
+
     _.defer(function () {
       if ($('#join-cluster')[0].checked)
         $('.login-credentials').show();

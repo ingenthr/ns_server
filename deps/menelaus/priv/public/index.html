@@ -1695,48 +1695,16 @@
       If this new server will be added to an existing membase cluster
       you may join that cluster now. To do so select "Join a cluster now". You
       can join a cluster later, but should do so before storing important data
-      on this server.  When joining a cluster, the joining server will drop all
-      of the data it currently holds.
+      on this server.
     </p>
     <div class="warning pat_10 join_cluster_dialog_errors_container"></div>
+    <div class="alert_red quota_error_message" style="display:none;">
+      <div class="al_text">
+        Invalid quota. Please try again.
+      </div>
+    </div>
     <form id="init_cluster_form" class="form block"><input type="submit" style="display:none;" />
-      <div class="pat_10"><label>
-        <input type="radio" name="join_cluster" id="no-join-cluster" checked />
-        Do NOT join a cluster now, maybe later.
-      </label></div>
-      <div class="memory-quota">
-	Dynamic RAM Quota:
-                  <input type="text" name="dynamic-ram-quota" value=""
-                  style="border:1px solid #ccd3d7; color:#7e7e80; font-size:10pt; height:25px; margin-left:5px; padding-left:5px; width:95px;" />
-                  <span style="color:#7e7e80; font-size:10pt;">MB</span>
-                  <span style="color:#7e7e80; font-size:10pt; margin-left:50px;">
-                    Total: <span class="ram-total-size">0GB</span>
-                  </span>
-      </div>
-      <div class="pat_10">
-        <label>
-          <input type="radio" name="join_cluster" id="join-cluster" />
-          Join a cluster now.
-          <div class="login-credentials">
-            <div>
-              <label for="clusterMemberHostIp">IP Address:</label>
-              <input type="text" class="inp" name="hostname" id="clusterMemberHostIp" value="" />
-              <br class="clear" />
-            </div>
-            <div>
-              <label for="user_inp">Username:</label>
-              <input type="text" class="inp" name="user" id="user_inp" value="Administrator" />
-              <br class="clear" />
-            </div>
-            <div>
-              <label for="password_inp">Password:</label>
-              <input type="password" class="inp" name="password" id="password_inp" />
-              <br class="clear" />
-            </div>
-          </div>
-        </label>
-      </div>
-                <table width="93%">
+                      <table width="93%">
             <col width="90%" />
             <col width="" />
             <tr>
@@ -1767,6 +1735,43 @@
               </td>
             </tr>
           </table>
+	<div class="pat_10"><label>
+        <input type="radio" name="join_cluster" id="no-join-cluster" checked />
+        Do NOT join a cluster now, maybe later.
+      </label></div>
+      <div class="memory-quota">
+	Dynamic RAM Quota:
+                  <input type="text" name="dynamic-ram-quota" value=""
+                  style="border:1px solid #ccd3d7; color:#7e7e80; font-size:10pt; height:25px; margin-left:5px; padding-left:5px; width:95px;" />
+                  <span style="color:#7e7e80; font-size:10pt;">MB</span>
+                  <span style="color:#7e7e80; font-size:10pt; margin-left:50px;">
+                    Total: <span class="ram-total-size">0GB</span>
+                  </span>
+      </div>
+      <div class="pat_10">
+        <label>
+          <input type="radio" name="join_cluster" id="join-cluster" />
+          Join a cluster now.
+          <div class="login-credentials">
+	    <div>When joining a cluster, the joining server will drop all of the data it currently holds in any membase and memcache buckets.</div>
+            <div>
+              <label for="clusterMemberHostIp">IP Address:</label>
+              <input type="text" class="inp" name="hostname" id="clusterMemberHostIp" value="" />
+              <br class="clear" />
+            </div>
+            <div>
+              <label for="user_inp">Username:</label>
+              <input type="text" class="inp" name="user" id="user_inp" value="Administrator" />
+              <br class="clear" />
+            </div>
+            <div>
+              <label for="password_inp">Password:</label>
+              <input type="password" class="inp" name="password" id="password_inp" />
+              <br class="clear" />
+            </div>
+          </div>
+        </label>
+      </div>
     </form>
     <div class="config-bottom">
       <button name="next" value="Next" class="submit next direction-button" id="step-2-next" type="submit">Next</button>
