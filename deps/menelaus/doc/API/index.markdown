@@ -221,7 +221,7 @@ of representations, since they are similar for different parts of the hierarchy.
 }
 </pre>
 
-As of now, only one pool per group of systems will be known and it will likely
+Only one pool per group of systems will be known and it will likely
 be defaulted to a name.  POSTing back a changed pool will return a 403.
 
 As can be seen, the "build" number of the implementation is apparent in the
@@ -232,6 +232,90 @@ is flexibility which allows for any given node to be aware of other pools.
 The Client-Specification-Version is optional in the request, but advised.  It
 allows for implementations to adjust to adjust representation and state
 transitions to the client, if backward compatibility is desirable.
+
+### Provisioning a Node
+
+Before a node can be used in a cluster, a few things may need to be
+configured.  Specifically, if creating a new cluster, the memory quota
+per node for that cluster must be set.  Whether the node is joining an
+existing cluster or starting a new cluster, it's storage path must be
+configured.
+
+Either creating a new cluster or adding a node to a cluster is
+referred to as provisioning, and has several steps required.
+
+After bootstrapping the following will need to be accomplished.
+
+1. Configure the node's disk path.
+2. Configure the cluster's memory quota.  This is optional.  It will
+inherit the memory quota if the node is to be joined to a cluster and
+it will default to 80% of physical memory if not specified.
+
+The next step depends on whether a new cluster is being created or an
+existing cluster will be joined.  If a new cluster is to be created,
+it will need to be "secured" by providing a username and password for
+the administrator.  If the node is to be joined to another cluster,
+then it will need the location and credentials to the REST interface
+of that cluster.
+
+
+####Examples
+
+
+#####Configuring the disk path for a node.
+
+Node resources can be configured through a controller on the node.
+The primary resource to be configured is the path on the node for
+persisting files.  This must be configured prior to creating a new
+cluster or configuring the node into an existing cluster.
+
+*Request*
+
+<pre class="restcalls">
+POST /pools/default HTTP/1.1
+Host: node.in.your.cluster:8080
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Authorization: Basic YWRtaW46YWRtaW4=
+Content-Length: xx
+
+path=/var/tmp/test
+</pre>
+
+*Response*
+
+<pre class="json">
+ HTTP/1.1 200 OK
+ Content-Type: application/com.northscale.store+json
+ Content-Length: 0
+ </pre>
+
+<pre>curl -i -d path=/var/tmp/test http://localhost:8080/nodes/self/controller/resources</pre>
+
+#####Configuring a cluster's memory quota.
+
+*Request*
+
+<pre class="restcalls">
+POST /pools/default HTTP/1.1
+Host: node.in.your.cluster:8080
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Authorization: Basic YWRtaW46YWRtaW4=
+Content-Length: xx
+
+memoryQuota=400
+</pre>
+
+*Response*
+
+<pre class="json">
+ HTTP/1.1 200 OK
+ Content-Type: application/com.northscale.store+json
+ Content-Length: 0
+ </pre>
+ 
+ This, for example could have been carried out with curl.
+ 
+<pre>curl -i -d memoryQuota=400 http://localhost:8080/pools/default</pre>
 
 ###Pool Details
 
@@ -957,5 +1041,8 @@ have been referenced.
 * 20100129 Updated create bucket documentation
 * 20100209 Updated pool details, many fixes, adding cache reserved and allocated
 * 20100218 Added documentation on removing a node
-* 20100224 Documented client logging interface and cleaned up some legacy things
+* 20100224 Documented client logging interface and cleaned up some
+  legacy things
+* 20100803 Various updates for 1.6, mostly to pool resource
+* 20100809 Added section on provisioning and provisioning calls
 
