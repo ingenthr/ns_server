@@ -79,7 +79,7 @@ function assertInclusion(msg, item, set) {
 function assertSetEquals(set1, set2) {
   set1 = _.toArray(set1);
   set2 = _.toArray(set2);
-  assertEquals("set{1,2}.length", set1.length, set2.length); 
+  assertEquals("set{1,2}.length", set1.length, set2.length);
   var missing = [];
   _.each(set1, function (e, i) {
     if (!_.include(set2, e))

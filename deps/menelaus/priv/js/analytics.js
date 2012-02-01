@@ -216,7 +216,7 @@ var KnownStats = [
   ["cas_misses", "CAS misses per second"]
   // ["ep_flusher_todo", "EP-flusher todo"],
   // ["ep_queue_size", "EP queue size"],
-  // ["updates", "Updates per second\nSum of set, increment, decrement, cas and delete operations per second"], 
+  // ["updates", "Updates per second\nSum of set, increment, decrement, cas and delete operations per second"],
 ];
 
 var StatGraphs = {
