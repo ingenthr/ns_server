@@ -134,7 +134,7 @@ RESTful endpoints in the representation of the item one would control.
 * Pool - A collection of physical resources grouped together and providing
 services.  A member of a pool is a Node.  Pools were later renamed to "clusters"
 (and the previous concept of cluster changed) so this document may refer to either.
-    * _Statistics_ - Pools provide an overall pool level data view of counters 
+    * _Statistics_ - Pools provide an overall pool level data view of counters
       and periodic metrics of the overall system. (note, this is missing in version 1.6)
 * Node - A system within a pool.  Nodes may provide Node-local representations
 of a service, but are also required to provide or proxy Pool level resources.
@@ -252,7 +252,7 @@ transitions to the client, if backward compatibility is desirable.
  HTTP/1.1 200 OK
  Content-Type: application/com.northscale.store+json
  Content-Length: nnn
- 
+
  {
 	    "name":"default",
 	    "nodes":[{
@@ -316,7 +316,7 @@ transitions to the client, if backward compatibility is desirable.
 	        "uri":"/pools/default/stats"
 	    }
 	}
- 
+
 </pre>
 
 At the highest level, a pool describes a cluster (as mentioned above).  This
@@ -328,17 +328,17 @@ the default bucket for a pool is, the system will attempt to connect non-SASL,
 non-proxied to a bucket clients to a bucket named "default".  If it does not
 exist, the connection will be dropped.
 
-Clients MUST NOT rely on the node list here to create their "server list" for 
-when connecting.  They MUST instead issue an HTTP get call to the bucket to 
+Clients MUST NOT rely on the node list here to create their "server list" for
+when connecting.  They MUST instead issue an HTTP get call to the bucket to
 get the node list for that specific bucket.
 
 The controllers, all of which accept parameters as x-www-form-urlencoded, for
 this list perform the following functions:
 
 *ejectNode* - Eject a node from the cluster.  Required parameter:
-"otpNode", the node to be ejected.  
+"otpNode", the node to be ejected.
 *addNode* - Add a node to this cluster.  Required parameters: "hostname",
-"user" (which is the admin user for the node), and "password".  
+"user" (which is the admin user for the node), and "password".
 *rebalance* - Rebalance the existing cluster.  This controller is either used
 without any parameters or requires both "knownNodes" and "ejectedNodes".  When
 used with parameters, this allows a client to state the existing known nodes
@@ -347,21 +347,21 @@ operation.  To ensure no cluster state changes have occured since a
 client last got a list of nodes, both the known nodes and the node to
 be ejected must be supplied.  If the list does not match the set of
 nodes, the request will fail with an HTTP 400 indicating a mismatch.  Note
-rebalance progress is available via the rebalanceProgress uri.  
+rebalance progress is available via the rebalanceProgress uri.
 *failover* - Failover the vbuckets from a given node to the nodes which have
 replicas of data for those vbuckets.  The "otpNode" parameter is required and
-specifies the node to be failed over.  
+specifies the node to be failed over.
 *reAddNode* - The "otpNode" parameter is required and specifies the node to be
-re-added.  
+re-added.
 *stopRebalance* - Stop any rebalance operation currently running.
-This takes no parameters.  
+This takes no parameters.
 
 The list of nodes will list each node in the cluster.  It will,
 additionally, list some attributes of the nodes.
 
 <table>
 <tr><td>memoryTotal</td><td>The total amount of memory available
-to membase, allocated and free. May or may not be equal to the amount 
+to membase, allocated and free. May or may not be equal to the amount
 of memory configured in the system.</td></tr>
 <tr><td>memoryFree</td><td>The amount of memory available to be
 allocated.  This is equal to the memoryTotal, subtracting out all
@@ -448,12 +448,12 @@ by all buckets on this node.</td></tr>
    }
  ]
  </pre>
- 
-Clients to the system can choose to use either the proxy path or the direct 
-path.  If they use the direct path, they will not be insulated from most 
-reconfiguration changes to the bucket.  This means they will need to 
-either poll the bucket's URI or connect to the streamingUri to receive 
-updates when the bucket configuration changes.  This happens, for instance, 
+
+Clients to the system can choose to use either the proxy path or the direct
+path.  If they use the direct path, they will not be insulated from most
+reconfiguration changes to the bucket.  This means they will need to
+either poll the bucket's URI or connect to the streamingUri to receive
+updates when the bucket configuration changes.  This happens, for instance,
 when nodes are added, removed, or may fall into an unhealthy state.
 
 #### Named Bucket and Bucket Streaming URI
@@ -501,18 +501,18 @@ when nodes are added, removed, or may fall into an unhealthy state.
     "stats": { "uri" : "/pools/default/buckets/default/stats" } }
  }
  </pre>
- 
-The individual bucket request is exactly the same as what would be 
+
+The individual bucket request is exactly the same as what would be
 obtained from the item in the array for the entire buckets list above.
 
 The streamingUri is exactly the same except it streams HTTP chunks using
-chunked encoding.  A response of "\n\n\n\n" delimits chunks.  This will 
-likely be converted to a "zero chunk" in a future release of this API, and 
+chunked encoding.  A response of "\n\n\n\n" delimits chunks.  This will
+likely be converted to a "zero chunk" in a future release of this API, and
 thus the behavior of the streamingUri should be considered evolving.
 
 #### Flushing a bucket
 
-The bucket details provide a bucket URI at which a simple request can be 
+The bucket details provide a bucket URI at which a simple request can be
 made to flush the bucket.
 
 <pre class="restcalls">
@@ -528,7 +528,7 @@ by the service.  The simple requirement is for a POST with an appropriate
 `Authorization` header, if the system is secured.
 
 The response will be a simple `204 No Content` if the flush is successful
-and a `404 Not Found` if the URI is invalid or does not correspond to a 
+and a `404 Not Found` if the URI is invalid or does not correspond to a
 bucket the system is familiar with.
 
 #### Deleting a bucket
@@ -942,7 +942,7 @@ have been referenced.
 * 20091207 Removed default bucket, removed ID/GUIDs from buckets/pools, changed
   bucket rules to be single value cache range rather than persist range.  Added
   bucket renaming. (matt.ingenthron@northscale.com)
-* 20091208 Added bucket level preferred port configuration to RESTful 
+* 20091208 Added bucket level preferred port configuration to RESTful
   interface. (matt.ingenthron@northscale.com)
 * 20091210 Moved to camelCase for JSON object names.  Added restrictions on
   pool and bucket names.  (matt.ingenthron@northscale.com)

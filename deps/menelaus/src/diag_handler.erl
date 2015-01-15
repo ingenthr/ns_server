@@ -100,7 +100,7 @@ generate_diag_filename() ->
     {{YYYY, MM, DD}, {Hour, Min, Sec}} = calendar:now_to_local_time(now()),
     io_lib:format("ns-diag-~4.4.0w~2.2.0w~2.2.0w~2.2.0w~2.2.0w~2.2.0w.txt",
                   [YYYY, MM, DD, Hour, Min, Sec]).
-    
+
 
 diag_format_log_entry(Entry) ->
     [Type, Code, Module,
@@ -164,5 +164,5 @@ handle_sasl_logs(Req) ->
             menelaus_util:server_header(),
             chunked}),
     handle_logs(Resp).
-    
+
 

@@ -1,7 +1,7 @@
 #! /bin/bash
 # author: litaocheng@gmail.com
 # date: 2009.10.16
-# desc: get the mochiweb from the google code svn, and install 
+# desc: get the mochiweb from the google code svn, and install
 #       it to the erlang otp lib directory(makesure you have install
 #       the erlang otp).
 #       1, get the erlang otp lib dir

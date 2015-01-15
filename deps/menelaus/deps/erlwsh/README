@@ -13,8 +13,8 @@ Install:
      Then,compile all sources:
              make
      At last,you can start erlwsh by start.sh
-             ./start.sh   
-    
+             ./start.sh
+
      Erlwsh is online:  http://localhost:8000/shell
 
 
